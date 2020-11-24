@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { auth } from '../../firebase/firebase.utils';
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 import { ReactComponent as Logo } from '../../assets/crown.svg'
 
 import './header.styles.scss';
+// import cartReducer from '../../redux/cart/cart.reducer';
 
 
 
-const Header = ({ currentUser }) => (
+const Header = ({ currentUser, hidden }) => (
     <div className='header'>
         <Link className='logo-container' to='/'>
             <Logo className='logo' />
@@ -24,13 +27,25 @@ const Header = ({ currentUser }) => (
                 :
                 <Link className='option' to='/signin' >SIGN IN</Link>
             }
+            <CartIcon />
 
-        </div>
+        </div>  
+        {
+            hidden ? null : <CartDropdown />
+        }
+        
     </div>
 )
 
-const mapStatetoProps = state => ({ 
-    currentUser: state.user.currentUser
+// this was the first, check the next for deconstructing nested
+// const mapStatetoProps = state => ({ 
+//     currentUser: state.user.currentUser
+// })
+
+
+const mapStatetoProps = ({user: {currentUser}, cart: { hidden } }) => ({ 
+    currentUser: currentUser,
+    hidden: hidden
 })
 
 export default connect(mapStatetoProps)(Header);
